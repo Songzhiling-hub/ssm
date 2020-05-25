@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yourname.ssm.student.dao.IStuDao"><!-- 命名空间 是 接口的全路径 -->
+    <select id="getList" resultType="Map" parameterType="Map">
+        SELECT s.id,s.sno,s.sname,s.ssex,p.pro_name,c.classname,s.comeDate,s.tel
+        FROM
+            studentinfo s LEFT JOIN
+            classinfo c on s.classNo=c.classno LEFT JOIN
+            profession p on s.profession=p.pro_no
+        where
+            s.isDel = 0
+        LIMIT #{begin},#{pageSize}
+    </select>
+
+    <select id="getCount" resultType="Long">
+        select count(*) from studentinfo where isDel=0
+    </select>
+
+    <insert id="save" parameterType="Map">
+        insert into studentinfo values(#{id},#{sno},#{sname},#{ssex},#{sbirth},#{idcard},
+        #{profession},#{clazzNo},#{comeDate},#{tel},#{address},#{nation},#{zzmm},sysdate(),'xx',sysdate(),'xx',0);
+    </insert>
+
+    <select id="getObject" resultType="Map" parameterType="String">
+        select * from studentinfo where id=#{id}
+    </select>
+
+    <update id="update" parameterType="Map">
+        update studentinfo
+        <set>
+            <if test="#{sno} != null">
+                sno=#{sno},
+            </if>
+            <if test="#{sname} != null">
+                sname=#{sname},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <update id="delete" parameterType="String">
+        update studentinfo set isDel=1 where id=#{id}
+    </update>
+
+</mapper>
